@@ -91,13 +91,21 @@ for line in f:
 f.close()
 
 # 0. map agent to racks
-RACKSIZE = int(len(datanodes) / RACKNUM)  # 3 
+RACKSIZE = int(len(datanodes) / RACKNUM)   
 if len(datanodes) % RACKNUM != 0:
     RACKSIZE = RACKSIZE + 1
 rack2agents={}
-for i in range(len(datanodes)): # 0-8
+for i in range(ECK): # 0-9
     agentid = i
     rackid = agentid//RACKSIZE # get int
+    if rackid not in rack2agents:
+        rack2agents[rackid] = [datanodes[i]]
+    else:
+        rack2agents[rackid].append(datanodes[i])
+
+for i in range(ECK, ECN): # 10-13
+    agentid = i
+    rackid = (ECN-1)//RACKSIZE 
     if rackid not in rack2agents:
         rack2agents[rackid] = [datanodes[i]]
     else:
@@ -120,7 +128,7 @@ for stripeid in range(NSTRIPES):
     blklist = []
     iplist = []
 
-    for blkid in range(ECK):  # ECN=9 ECK=6
+    for blkid in range(ECK):  # ECN=14 ECK=10
         blkname = "blk-"+str(stripeid)+"-"+str(blkid)
         blklist.append(blkname)
 
@@ -128,11 +136,11 @@ for stripeid in range(NSTRIPES):
         agentlist = rack2agents[rackid]
 
         # randomly choose one from agentlist
-        tmpid = random.randint(1, len(agentlist)-1)
+        tmpid = random.randint(0, len(agentlist)-1)
         tmpip = agentlist[tmpid]
 
         while tmpip in iplist:
-            tmpid = random.randint(1, len(agentlist)-1)
+            tmpid = random.randint(0, len(agentlist)-1)
             tmpip = agentlist[tmpid]
         iplist.append(tmpip)
 
@@ -145,11 +153,11 @@ for stripeid in range(NSTRIPES):
         agentlist = rack2agents[rackid]
 
         # randomly choose one from agentlist
-        tmpid = random.randint(1, len(agentlist)-1)
+        tmpid = random.randint(0, len(agentlist)-1)
         tmpip = agentlist[tmpid]
 
         while tmpip in iplist:
-            tmpid = random.randint(1, len(agentlist)-1)
+            tmpid = random.randint(0, len(agentlist)-1)
             tmpip = agentlist[tmpid]
 
         iplist.append(tmpip)
